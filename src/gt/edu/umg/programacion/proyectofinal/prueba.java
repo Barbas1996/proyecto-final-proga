@@ -4,6 +4,7 @@ public class prueba {
 
 	public static void main(String arg[]) {
 		System.out.println("hola mundo");
+		System.out.println("momento de crear tu proyecto final");
 		
 	}
 }
