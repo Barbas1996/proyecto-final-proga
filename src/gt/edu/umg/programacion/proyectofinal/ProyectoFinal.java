@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -28,13 +29,14 @@ public class ProyectoFinal extends JFrame {
 	private JPanel contentPane;
 	private JTextField TxtEntidad;
 	private JTextField TxtAtributo;
-	private JTable table;
+	private JTable PaneFinal;
 	private String filePath;
 	private JButton Cargar;
 	private JTable tbData;
 	RandomAccessFile archivo;
 	private JTextField txtEntidad;
 	private JTextField txtAtributo;
+	private JPanel paneFinal;
 
 	/**
 	 * Launch the application.
@@ -83,13 +85,32 @@ public class ProyectoFinal extends JFrame {
 			buffer = new StringBuffer(linea);
 		} else {
 			buffer = new StringBuffer(cantidadCaracteres);
-
 		}
 		buffer.setLength(cantidadCaracteres);
 		archivo.writeChars(buffer.toString());
 	}
-	
 
+	public Entidad obtenerEntidad(int indice) throws Exception {
+		if (indice < 1) {
+			JOptionPane.showMessageDialog(null, "El identificador debe ser mayor a uno", "Error en datos",
+					JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+		Entidad e = new Entidad();
+		int posicion = SIZE *(indice -1);
+		archivo.seek(posicion);
+		try {
+			e.setIndice(archivo.readInt());
+			e.setNombre(leerString());
+			e.setCantidad(archivo.readInt());
+			
+			
+		} catch (EOFException ex) {
+			e = new Entidad();
+		}
+		return e;
+
+	}
 
 	public ProyectoFinal() {
 		;
@@ -140,17 +161,16 @@ public class ProyectoFinal extends JFrame {
 		JButton BtnCargar = new JButton("Cargar");
 		BtnCargar.addActionListener(new ActionListener() {
 
-			
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
-			});
+		});
 		BtnCargar.setBounds(20, 169, 153, 23);
 		contentPane.add(BtnCargar);
 
-		table = new JTable();
-		table.setBounds(10, 407, 519, -160);
-		contentPane.add(table);
+		PaneFinal = new JTable();
+		PaneFinal.setBounds(10, 407, 519, -160);
+		contentPane.add(PaneFinal);
 
 		JButton BtnBorrarEntidad = new JButton("Borrar Entidad");
 		BtnBorrarEntidad.setBounds(420, 15, 120, 23);
