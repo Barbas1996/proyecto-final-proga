@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -37,6 +38,7 @@ public class ProyectoFinal extends JFrame {
 	private JTextField txtEntidad;
 	private JTextField txtAtributo;
 	private JPanel paneFinal;
+	private DefaultTableModel tableModel;
 
 	/**
 	 * Launch the application.
@@ -97,18 +99,36 @@ public class ProyectoFinal extends JFrame {
 			return null;
 		}
 		Entidad e = new Entidad();
-		int posicion = SIZE *(indice -1);
+		int posicion = SIZE * (indice - 1);
 		archivo.seek(posicion);
 		try {
 			e.setIndice(archivo.readInt());
 			e.setNombre(leerString());
 			e.setCantidad(archivo.readInt());
-			
-			
+
 		} catch (EOFException ex) {
 			e = new Entidad();
 		}
 		return e;
+
+	}
+
+	private void agregarEntidad(Entidad e) throws Exception {
+		if (e == null) {
+			JOptionPane.showMessageDialog(null, "no se ha proporciando datos validos", "ERROR DE DATOS",
+					JOptionPane.ERROR_MESSAGE);
+		} else {
+			Entidad entidad = new Entidad();
+			int posicion = SIZE * (e.getIndice() - 1);
+			archivo.seek(posicion);
+			archivo.writeInt(e.getIndice());
+			escribirString(e.getNombre());
+			tableModel.addRow(new Object[] {e.getIndice(),e.getNombre()});
+			txtEntidad.setText("");
+			
+			
+			
+		}
 
 	}
 
